@@ -32,6 +32,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+void display7SEG(int num);
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -134,7 +135,35 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void display7SEG(int num)
+{
+    // Segment values for digits 0-9 (active-low: 0 turns ON the segment)
+    uint8_t segment_map[10] = {
+        0b11000000, // 0: a, b, c, d, e, f
+        0b11111001, // 1: b, c
+        0b10100100, // 2: a, b, d, e, g
+        0b10110000, // 3: a, b, c, d, g
+        0b10011001, // 4: b, c, f, g
+        0b10010010, // 5: a, c, d, f, g
+        0b10000010, // 6: a, c, d, e, f, g
+        0b11111000, // 7: a, b, c
+        0b10000000, // 8: a, b, c, d, e, f, g
+        0b10010000  // 9: a, b, c, d, f, g
+    };
 
+    // Clear the current output on PB0-PB6
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6, GPIO_PIN_SET);
+
+    // Write the segments to the 7-segment display
+    for (int i = 0; i < 7; i++)
+    {
+        // Check if the segment should be ON or OFF
+        GPIO_PinState pin_state = (segment_map[num] & (1 << i)) ? GPIO_PIN_SET : GPIO_PIN_RESET;
+
+        // Set the corresponding pin
+        HAL_GPIO_WritePin(GPIOB, (1 << i), pin_state);
+    }
+}
 /* USER CODE END 4 */
 
 /**
