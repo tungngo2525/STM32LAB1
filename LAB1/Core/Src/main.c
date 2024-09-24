@@ -47,8 +47,11 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+void updateClockDisplay(int hour, int minute, int second);
 void clearAllClock(void);
 void setNumberOnClock(int num);
+void clearNumberOnClock(int num);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -74,7 +77,9 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+    int hour = 0;
+    int minute = 0;
+    int second = 0;
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -85,6 +90,7 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
+  MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -94,6 +100,28 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+	  /* Display the current time on the clock */
+	         updateClockDisplay(hour, minute, second);
+
+	         /* Delay for 1 second */
+	         HAL_Delay(1000);
+
+	         /* Increment seconds */
+	         second++;
+	         if (second >= 12) // 12 LEDs, 5 seconds per LED
+	         {
+	             second = 0;    // Reset seconds after completing one round
+	             minute++;      // Increment minute
+	             if (minute >= 12) // 12 LEDs, 5 minutes per LED
+	             {
+	                 minute = 0; // Reset minute after completing one round
+	                 hour++;      // Increment hour
+	                 if (hour >= 12) // 12 LEDs for 12 hours
+	                 {
+	                     hour = 0; // Reset hour after 12
+	                 }
+	             }
+	         }
 
     /* USER CODE BEGIN 3 */
   }
@@ -135,14 +163,67 @@ void SystemClock_Config(void)
   }
 }
 
-/* USER CODE BEGIN 4 */
-void clearAllClock(void)
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
 {
-    // Turn off all LEDs connected to PA4 through PA15
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN4 | GPIO_PIN5 | GPIO_PIN6 | GPIO_PIN7 |GPIO_PIN8 | GPIO_PIN9 | GPIO_PIN10 | GPIO_PIN11 |
-    GPIO_PIN12 | GPIO_PIN13 | GPIO_PIN14 | GPIO_PIN15, GPIO_PIN_SET);
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN4_Pin|GPIO_PIN5_Pin|GPIO_PIN6_Pin|GPIO_PIN7_Pin
+                          |GPIO_PIN8_Pin|GPIO_PIN9_Pin|GPIO_PIN10_Pin|GPIO_PIN11_Pin
+                          |GPIO_PIN12_Pin|GPIO_PIN13_Pin|GPIO_PIN14_Pin|GPIO_PIN15_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0_Pin|GPIO_PIN_1_Pin|GPIO_PIN_2_Pin|GPIO_PIN_10_Pin
+                          |GPIO_PIN_11_Pin|GPIO_PIN_12_Pin|GPIO_PIN_13_Pin|GPIO_PIN_14_Pin
+                          |GPIO_PIN_15_Pin|GPIO_PIN_3_Pin|GPIO_PIN_4_Pin|GPIO_PIN_5_Pin
+                          |GPIO_PIN_6_Pin|GPIO_PIN_7_Pin|GPIO_PIN_8_Pin|GPIO_PIN_9_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : PAPin PAPin PAPin PAPin
+                           PAPin PAPin PAPin PAPin
+                           PAPin PAPin PAPin PAPin */
+  GPIO_InitStruct.Pin = GPIO_PIN4_Pin|GPIO_PIN5_Pin|GPIO_PIN6_Pin|GPIO_PIN7_Pin
+                          |GPIO_PIN8_Pin|GPIO_PIN9_Pin|GPIO_PIN10_Pin|GPIO_PIN11_Pin
+                          |GPIO_PIN12_Pin|GPIO_PIN13_Pin|GPIO_PIN14_Pin|GPIO_PIN15_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PBPin PBPin PBPin PBPin
+                           PBPin PBPin PBPin PBPin
+                           PBPin PBPin PBPin PBPin
+                           PBPin PBPin PBPin PBPin */
+  GPIO_InitStruct.Pin = GPIO_PIN_0_Pin|GPIO_PIN_1_Pin|GPIO_PIN_2_Pin|GPIO_PIN_10_Pin
+                          |GPIO_PIN_11_Pin|GPIO_PIN_12_Pin|GPIO_PIN_13_Pin|GPIO_PIN_14_Pin
+                          |GPIO_PIN_15_Pin|GPIO_PIN_3_Pin|GPIO_PIN_4_Pin|GPIO_PIN_5_Pin
+                          |GPIO_PIN_6_Pin|GPIO_PIN_7_Pin|GPIO_PIN_8_Pin|GPIO_PIN_9_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
 }
 
+/* USER CODE BEGIN 4 */
+
+void clearAllClock(void)
+{
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7 |
+                            GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 |
+                            GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15,
+                            GPIO_PIN_SET);
+}
+
+/* Function to turn on a specific LED on the clock */
 void setNumberOnClock(int num)
 {
     if (num >= 0 && num < 12)
@@ -150,6 +231,23 @@ void setNumberOnClock(int num)
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4 << num, GPIO_PIN_RESET);
     }
 }
+
+/* Function to update the clock display (hour, minute, second) */
+void updateClockDisplay(int hour, int minute, int second)
+{
+    /* Clear all LEDs first */
+    clearAllClock();
+
+    /* Turn on the LED for the hour */
+    setNumberOnClock(hour);
+
+    /* Turn on the LED for the minute */
+    setNumberOnClock(minute);
+
+    /* Turn on the LED for the second */
+    setNumberOnClock(second);
+}
+
 /* USER CODE END 4 */
 
 /**
