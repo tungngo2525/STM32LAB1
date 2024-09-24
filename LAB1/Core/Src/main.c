@@ -136,8 +136,8 @@ int main(void)
           HAL_Delay(1000);         // Delay 1 second
       }
       // Step 3: East-West Yellow, North-South Red
-      HAL_GPIO_WritePin(GPIO_PIN_8_GPIO_Port, GPIO_PIN_8_Pin, GPIO_PIN_SET);   // EW Green OFF
-      HAL_GPIO_WritePin(GPIO_PIN_9_GPIO_Port, GPIO_PIN_9_Pin, GPIO_PIN_RESET); // EW Yellow ON
+      HAL_GPIO_WritePin(GPIO_PIN_8_GPIO_Port, GPIO_PIN_8_Pin, GPIO_PIN_RESET);   // EW Green OFF
+      HAL_GPIO_WritePin(GPIO_PIN_9_GPIO_Port, GPIO_PIN_9_Pin, GPIO_PIN_SET); // EW Yellow ON
       // Countdown for East-West Yellow Light (2 seconds)
       for (countdown = 2; countdown > 0; countdown--)
       {

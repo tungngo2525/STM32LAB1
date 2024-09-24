@@ -225,13 +225,13 @@ int main(void)
  800022e:	dcf2      	bgt.n	8000216 <main+0xca>
       }
       // Step 3: East-West Yellow, North-South Red
-      HAL_GPIO_WritePin(GPIO_PIN_8_GPIO_Port, GPIO_PIN_8_Pin, GPIO_PIN_SET);   // EW Green OFF
- 8000230:	2201      	movs	r2, #1
+      HAL_GPIO_WritePin(GPIO_PIN_8_GPIO_Port, GPIO_PIN_8_Pin, GPIO_PIN_RESET);   // EW Green OFF
+ 8000230:	2200      	movs	r2, #0
  8000232:	f44f 7180 	mov.w	r1, #256	; 0x100
  8000236:	4810      	ldr	r0, [pc, #64]	; (8000278 <main+0x12c>)
  8000238:	f000 fc5a 	bl	8000af0 <HAL_GPIO_WritePin>
-      HAL_GPIO_WritePin(GPIO_PIN_9_GPIO_Port, GPIO_PIN_9_Pin, GPIO_PIN_RESET); // EW Yellow ON
- 800023c:	2200      	movs	r2, #0
+      HAL_GPIO_WritePin(GPIO_PIN_9_GPIO_Port, GPIO_PIN_9_Pin, GPIO_PIN_SET); // EW Yellow ON
+ 800023c:	2201      	movs	r2, #1
  800023e:	f44f 7100 	mov.w	r1, #512	; 0x200
  8000242:	480d      	ldr	r0, [pc, #52]	; (8000278 <main+0x12c>)
  8000244:	f000 fc54 	bl	8000af0 <HAL_GPIO_WritePin>
