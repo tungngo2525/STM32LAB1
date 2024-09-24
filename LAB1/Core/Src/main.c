@@ -47,6 +47,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void clearAllClock(void)
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -134,7 +135,12 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void clearAllClock(void)
+{
+    // Turn off all LEDs connected to PA4 through PA15
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN4 | GPIO_PIN5 | GPIO_PIN6 | GPIO_PIN7 |GPIO_PIN8 | GPIO_PIN9 | GPIO_PIN10 | GPIO_PIN11 |
+    GPIO_PIN12 | GPIO_PIN13 | GPIO_PIN14 | GPIO_PIN15, GPIO_PIN_SET);
+}
 /* USER CODE END 4 */
 
 /**
