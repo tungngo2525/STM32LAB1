@@ -48,6 +48,7 @@ void display7SEG(int num);
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -84,6 +85,7 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
+  MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -97,16 +99,17 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  // Step 1: East-West Red, North-South Green
+      /* USER CODE END WHILE */
+      // Step 1: East-West Red, North-South Green
       // North-South Traffic Lights
-      HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);  // NS Green ON
-      HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_SET);  // NS Yellow OFF
-      HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);        // NS Red OFF
+      HAL_GPIO_WritePin(GPIO_PIN_12_GPIO_Port, GPIO_PIN_12_Pin, GPIO_PIN_RESET);  // NS Green ON
+      HAL_GPIO_WritePin(GPIO_PIN_11_GPIO_Port, GPIO_PIN_11_Pin, GPIO_PIN_SET);  // NS Yellow OFF
+      HAL_GPIO_WritePin(GPIO_PIN_10_GPIO_Port, GPIO_PIN_10_Pin, GPIO_PIN_SET);        // NS Red OFF
 
       // East-West Traffic Lights
-      HAL_GPIO_WritePin(GPIO_PIN9_GPIO_Port, GPIO_PIN9_Pin, GPIO_PIN_RESET);  // EW Red ON
-      HAL_GPIO_WritePin(GPIO_PIN10_GPIO_Port, GPIO_PIN10_Pin, GPIO_PIN_SET);  // EW Yellow OFF
-      HAL_GPIO_WritePin(GPIO_PIN11_GPIO_Port, GPIO_PIN11_Pin, GPIO_PIN_SET);  // EW Green OFF
+      HAL_GPIO_WritePin(GPIO_PIN_7_GPIO_Port, GPIO_PIN_7_Pin, GPIO_PIN_RESET);  // EW Red ON
+      HAL_GPIO_WritePin(GPIO_PIN_8_GPIO_Port, GPIO_PIN_8_Pin, GPIO_PIN_SET);  // EW Yellow OFF
+      HAL_GPIO_WritePin(GPIO_PIN_9_GPIO_Port, GPIO_PIN_9_Pin, GPIO_PIN_SET);  // EW Green OFF
 
       // Countdown for East-West Red Light (5 seconds)
       for (countdown = 5; countdown > 0; countdown--)
@@ -115,17 +118,17 @@ int main(void)
           // When the countdown reaches 3, switch North-South to Yellow
           if (countdown == 3)
           {
-              HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);    // NS Green OFF
-              HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_RESET); // NS Yellow ON
+              HAL_GPIO_WritePin(GPIO_PIN_12_GPIO_Port, GPIO_PIN_12_Pin, GPIO_PIN_SET);    // NS Green OFF
+              HAL_GPIO_WritePin(GPIO_PIN_11_GPIO_Port, GPIO_PIN_11_Pin, GPIO_PIN_RESET); // NS Yellow ON
           }
           HAL_Delay(1000);  // Delay 1 second
       }
       // North-South Traffic Lights turn Red after 2 seconds of Yellow
-      HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_SET);   // NS Yellow OFF
-      HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);       // NS Red ON
+      HAL_GPIO_WritePin(GPIO_PIN_11_GPIO_Port, GPIO_PIN_11_Pin, GPIO_PIN_SET);   // NS Yellow OFF
+      HAL_GPIO_WritePin(GPIO_PIN_10_GPIO_Port, GPIO_PIN_10_Pin, GPIO_PIN_RESET);       // NS Red ON
       // Step 2: East-West Green, North-South Red
-      HAL_GPIO_WritePin(GPIO_PIN9_GPIO_Port, GPIO_PIN9_Pin, GPIO_PIN_SET);     // EW Red OFF
-      HAL_GPIO_WritePin(GPIO_PIN11_GPIO_Port, GPIO_PIN11_Pin, GPIO_PIN_RESET); // EW Green ON
+      HAL_GPIO_WritePin(GPIO_PIN_7_GPIO_Port, GPIO_PIN_7_Pin, GPIO_PIN_SET);     // EW Red OFF
+      HAL_GPIO_WritePin(GPIO_PIN_9_GPIO_Port, GPIO_PIN_9_Pin, GPIO_PIN_RESET); // EW Green ON
       // Countdown for East-West Green Light (3 seconds)
       for (countdown = 3; countdown > 0; countdown--)
       {
@@ -133,8 +136,8 @@ int main(void)
           HAL_Delay(1000);         // Delay 1 second
       }
       // Step 3: East-West Yellow, North-South Red
-      HAL_GPIO_WritePin(GPIO_PIN11_GPIO_Port, GPIO_PIN11_Pin, GPIO_PIN_SET);   // EW Green OFF
-      HAL_GPIO_WritePin(GPIO_PIN10_GPIO_Port, GPIO_PIN10_Pin, GPIO_PIN_RESET); // EW Yellow ON
+      HAL_GPIO_WritePin(GPIO_PIN_8_GPIO_Port, GPIO_PIN_8_Pin, GPIO_PIN_SET);   // EW Green OFF
+      HAL_GPIO_WritePin(GPIO_PIN_9_GPIO_Port, GPIO_PIN_9_Pin, GPIO_PIN_RESET); // EW Yellow ON
       // Countdown for East-West Yellow Light (2 seconds)
       for (countdown = 2; countdown > 0; countdown--)
       {
@@ -142,9 +145,7 @@ int main(void)
           HAL_Delay(1000);         // Delay 1 second
       }
       // Reset the traffic lights for the next cycle
-      HAL_GPIO_WritePin(GPIO_PIN10_GPIO_Port, GPIO_PIN10_Pin, GPIO_PIN_SET);   // EW Yellow OFF
-
-
+      HAL_GPIO_WritePin(GPIO_PIN_8_GPIO_Port, GPIO_PIN_8_Pin, GPIO_PIN_SET);   // EW Yellow OFF
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -183,6 +184,56 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|LED_GREEN_Pin|LED_YELLOW_Pin|GPIO_PIN8_Pin
+                          |GPIO_PIN9_Pin|GPIO_PIN10_Pin|GPIO_PIN11_Pin|GPIO_PIN12_Pin
+                          |GPIO_PIN13_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0_Pin|GPIO_PIN_1_Pin|GPIO_PIN_2_Pin|GPIO_PIN_10_Pin
+                          |GPIO_PIN_11_Pin|GPIO_PIN_12_Pin|GPIO_PIN_3_Pin|GPIO_PIN_4_Pin
+                          |GPIO_PIN_5_Pin|GPIO_PIN_6_Pin|GPIO_PIN_7_Pin|GPIO_PIN_8_Pin
+                          |GPIO_PIN_9_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : LED_RED_Pin LED_GREEN_Pin LED_YELLOW_Pin PAPin
+                           PAPin PAPin PAPin PAPin
+                           PAPin */
+  GPIO_InitStruct.Pin = LED_RED_Pin|LED_GREEN_Pin|LED_YELLOW_Pin|GPIO_PIN8_Pin
+                          |GPIO_PIN9_Pin|GPIO_PIN10_Pin|GPIO_PIN11_Pin|GPIO_PIN12_Pin
+                          |GPIO_PIN13_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PBPin PBPin PBPin PBPin
+                           PBPin PBPin PBPin PBPin
+                           PBPin PBPin PBPin PBPin
+                           PBPin */
+  GPIO_InitStruct.Pin = GPIO_PIN_0_Pin|GPIO_PIN_1_Pin|GPIO_PIN_2_Pin|GPIO_PIN_10_Pin
+                          |GPIO_PIN_11_Pin|GPIO_PIN_12_Pin|GPIO_PIN_3_Pin|GPIO_PIN_4_Pin
+                          |GPIO_PIN_5_Pin|GPIO_PIN_6_Pin|GPIO_PIN_7_Pin|GPIO_PIN_8_Pin
+                          |GPIO_PIN_9_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
 }
 
 /* USER CODE BEGIN 4 */
