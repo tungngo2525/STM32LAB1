@@ -94,13 +94,9 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  // Loop through each pin from PA4 to PA15
 	    for (int i = 4; i <= 15; i++)
 	    {
-	      // Turn on the current LED
 	      HAL_GPIO_WritePin(GPIOA, (1 << i), GPIO_PIN_RESET);
-
-	      // Delay for visibility (e.g., 500 ms)
 	      HAL_Delay(1000);
 	      HAL_GPIO_WritePin(GPIOA, (1 << i), GPIO_PIN_SET);
 	    }
