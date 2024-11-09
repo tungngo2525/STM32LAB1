@@ -99,7 +99,6 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-      /* USER CODE END WHILE */
       HAL_GPIO_WritePin(GPIO_PIN_12_GPIO_Port, GPIO_PIN_12_Pin, GPIO_PIN_RESET);  
       HAL_GPIO_WritePin(GPIO_PIN_11_GPIO_Port, GPIO_PIN_11_Pin, GPIO_PIN_SET);  
       HAL_GPIO_WritePin(GPIO_PIN_10_GPIO_Port, GPIO_PIN_10_Pin, GPIO_PIN_SET);        
