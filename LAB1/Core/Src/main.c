@@ -100,52 +100,46 @@ int main(void)
   {
     /* USER CODE END WHILE */
       /* USER CODE END WHILE */
-      // Step 1: East-West Red, North-South Green
-      // North-South Traffic Lights
-      HAL_GPIO_WritePin(GPIO_PIN_12_GPIO_Port, GPIO_PIN_12_Pin, GPIO_PIN_RESET);  // NS Green ON
-      HAL_GPIO_WritePin(GPIO_PIN_11_GPIO_Port, GPIO_PIN_11_Pin, GPIO_PIN_SET);  // NS Yellow OFF
-      HAL_GPIO_WritePin(GPIO_PIN_10_GPIO_Port, GPIO_PIN_10_Pin, GPIO_PIN_SET);        // NS Red OFF
+      HAL_GPIO_WritePin(GPIO_PIN_12_GPIO_Port, GPIO_PIN_12_Pin, GPIO_PIN_RESET);  
+      HAL_GPIO_WritePin(GPIO_PIN_11_GPIO_Port, GPIO_PIN_11_Pin, GPIO_PIN_SET);  
+      HAL_GPIO_WritePin(GPIO_PIN_10_GPIO_Port, GPIO_PIN_10_Pin, GPIO_PIN_SET);        
 
-      // East-West Traffic Lights
-      HAL_GPIO_WritePin(GPIO_PIN_7_GPIO_Port, GPIO_PIN_7_Pin, GPIO_PIN_RESET);  // EW Red ON
-      HAL_GPIO_WritePin(GPIO_PIN_8_GPIO_Port, GPIO_PIN_8_Pin, GPIO_PIN_SET);  // EW Yellow OFF
-      HAL_GPIO_WritePin(GPIO_PIN_9_GPIO_Port, GPIO_PIN_9_Pin, GPIO_PIN_SET);  // EW Green OFF
+      HAL_GPIO_WritePin(GPIO_PIN_7_GPIO_Port, GPIO_PIN_7_Pin, GPIO_PIN_RESET); 
+      HAL_GPIO_WritePin(GPIO_PIN_8_GPIO_Port, GPIO_PIN_8_Pin, GPIO_PIN_SET);  
+      HAL_GPIO_WritePin(GPIO_PIN_9_GPIO_Port, GPIO_PIN_9_Pin, GPIO_PIN_SET);  
 
-      // Countdown for East-West Red Light (5 seconds)
       for (countdown = 5; countdown > 0; countdown--)
       {
-          display7SEG(countdown);  // Display countdown on 7-segment
-          // When the countdown reaches 3, switch North-South to Yellow
+          display7SEG(countdown); 
           if (countdown == 3)
           {
-              HAL_GPIO_WritePin(GPIO_PIN_12_GPIO_Port, GPIO_PIN_12_Pin, GPIO_PIN_SET);    // NS Green OFF
-              HAL_GPIO_WritePin(GPIO_PIN_11_GPIO_Port, GPIO_PIN_11_Pin, GPIO_PIN_RESET); // NS Yellow ON
+              HAL_GPIO_WritePin(GPIO_PIN_12_GPIO_Port, GPIO_PIN_12_Pin, GPIO_PIN_SET);    
+              HAL_GPIO_WritePin(GPIO_PIN_11_GPIO_Port, GPIO_PIN_11_Pin, GPIO_PIN_RESET); 
           }
-          HAL_Delay(1000);  // Delay 1 second
+          HAL_Delay(1000);  
       }
-      // North-South Traffic Lights turn Red after 2 seconds of Yellow
-      HAL_GPIO_WritePin(GPIO_PIN_11_GPIO_Port, GPIO_PIN_11_Pin, GPIO_PIN_SET);   // NS Yellow OFF
-      HAL_GPIO_WritePin(GPIO_PIN_10_GPIO_Port, GPIO_PIN_10_Pin, GPIO_PIN_RESET);       // NS Red ON
-      // Step 2: East-West Green, North-South Red
-      HAL_GPIO_WritePin(GPIO_PIN_7_GPIO_Port, GPIO_PIN_7_Pin, GPIO_PIN_SET);     // EW Red OFF
-      HAL_GPIO_WritePin(GPIO_PIN_9_GPIO_Port, GPIO_PIN_9_Pin, GPIO_PIN_RESET); // EW Green ON
-      // Countdown for East-West Green Light (3 seconds)
+ 
+      HAL_GPIO_WritePin(GPIO_PIN_11_GPIO_Port, GPIO_PIN_11_Pin, GPIO_PIN_SET);   
+      HAL_GPIO_WritePin(GPIO_PIN_10_GPIO_Port, GPIO_PIN_10_Pin, GPIO_PIN_RESET);       
+      HAL_GPIO_WritePin(GPIO_PIN_7_GPIO_Port, GPIO_PIN_7_Pin, GPIO_PIN_SET);     
+      HAL_GPIO_WritePin(GPIO_PIN_9_GPIO_Port, GPIO_PIN_9_Pin, GPIO_PIN_RESET); 
+   
       for (countdown = 3; countdown > 0; countdown--)
       {
-          display7SEG(countdown);  // Display countdown on 7-segment
-          HAL_Delay(1000);         // Delay 1 second
+          display7SEG(countdown);  
+          HAL_Delay(1000);        
       }
-      // Step 3: East-West Yellow, North-South Red
-      HAL_GPIO_WritePin(GPIO_PIN_8_GPIO_Port, GPIO_PIN_8_Pin, GPIO_PIN_RESET);   // EW Green OFF
-      HAL_GPIO_WritePin(GPIO_PIN_9_GPIO_Port, GPIO_PIN_9_Pin, GPIO_PIN_SET); // EW Yellow ON
-      // Countdown for East-West Yellow Light (2 seconds)
+
+      HAL_GPIO_WritePin(GPIO_PIN_8_GPIO_Port, GPIO_PIN_8_Pin, GPIO_PIN_RESET);  
+      HAL_GPIO_WritePin(GPIO_PIN_9_GPIO_Port, GPIO_PIN_9_Pin, GPIO_PIN_SET); 
+
       for (countdown = 2; countdown > 0; countdown--)
       {
-          display7SEG(countdown);  // Display countdown on 7-segment
-          HAL_Delay(1000);         // Delay 1 second
+          display7SEG(countdown);  
+          HAL_Delay(1000); 
       }
-      // Reset the traffic lights for the next cycle
-      HAL_GPIO_WritePin(GPIO_PIN_8_GPIO_Port, GPIO_PIN_8_Pin, GPIO_PIN_SET);   // EW Yellow OFF
+
+      HAL_GPIO_WritePin(GPIO_PIN_8_GPIO_Port, GPIO_PIN_8_Pin, GPIO_PIN_SET);   
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
