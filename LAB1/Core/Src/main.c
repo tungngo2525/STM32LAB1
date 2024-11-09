@@ -93,8 +93,6 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   void display7SEG(int num);
-  // Function to control the 4-way traffic light with countdown display
-      // Countdown time in seconds
   int countdown;
   while (1)
   {
